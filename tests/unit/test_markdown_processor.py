@@ -10,7 +10,7 @@ class WhenProcessingMarkdown(DingusTestCase(process_markdown)):
         self.src_dir = Dingus('src_dir')
         self.target_dir = Dingus('target_dir')
 
-        mod.os.walk.return_value = [(self.src_dir, [], ['hello_world.markdown'])]
+        mod.os.listdir.return_value = ['hello_world.markdown']
         mod.os.path.splitext.return_value = ('hello_world', 'markdown')
 
         self.md = mod.markdown.Markdown()
@@ -24,7 +24,7 @@ class WhenProcessingMarkdown(DingusTestCase(process_markdown)):
         ).once()
 
     def should_find_markdown_files(self):
-        assert mod.os.calls('walk', self.src_dir)
+        assert mod.os.calls('listdir', self.src_dir)
 
     def should_convert_files(self):
 
