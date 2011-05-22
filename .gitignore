@@ -1,0 +1,15 @@
+/.vagrant
+/bin
+/build
+/dist
+/include
+/lib
+/man
+/nosetests.xml
+/src
+/manifests.tgz
+/tmp
+*.pyc
+*.swp
+*.egg
+README.txt

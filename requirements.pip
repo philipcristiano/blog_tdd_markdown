@@ -1,0 +1,5 @@
+coverage
+dingus
+markdown
+nose
+-e git://github.com/lacostej/nosyd.git#egg=nosyd
