@@ -3,10 +3,11 @@ from dingus import Dingus, DingusTestCase
 from markdown_processor import process_markdown
 import markdown_processor as mod
 
-class WhenProcessingMarkdown(DingusTestCase(process_markdown)):
+
+class BaseProcessing(DingusTestCase(process_markdown)):
 
     def setup(self):
-        super(WhenProcessingMarkdown, self).setup()
+        super(BaseProcessing, self).setup()
         self.src_dir = Dingus('src_dir')
         self.target_dir = Dingus('target_dir')
 
@@ -15,7 +16,8 @@ class WhenProcessingMarkdown(DingusTestCase(process_markdown)):
 
         self.md = mod.markdown.Markdown()
 
-        process_markdown(self.src_dir, self.target_dir)
+    def should_check_existance_of_target_dir(self):
+        assert mod.os.path.calls('exists', self.target_dir)
 
     def should_create_markdown_instance(self):
         assert mod.markdown.calls(
@@ -31,3 +33,25 @@ class WhenProcessingMarkdown(DingusTestCase(process_markdown)):
         in_file = mod.os.path.join(self.src_dir, 'hello_world.markdown')
         out_file = mod.os.path.join(self.target_dir, 'hello_world.html')
         assert self.md.calls('convertFile', in_file, out_file)
+
+
+class WhenProcessingMarkdown(BaseProcessing):
+
+    def setup(self):
+        BaseProcessing.setup(self)
+        mod.os.path.exists.return_value = False
+        process_markdown(self.src_dir, self.target_dir)
+
+    def should_create_target_directory(self):
+        assert mod.os.calls('mkdir', self.target_dir)
+
+
+class WhenProcessingMarkdownAndDirectoryExists(BaseProcessing):
+
+    def setup(self):
+        BaseProcessing.setup(self)
+        mod.os.path.exists.return_value = True
+        process_markdown(self.src_dir, self.target_dir)
+
+    def should_not_create_target_directory(self):
+        assert not mod.os.calls('mkdir')

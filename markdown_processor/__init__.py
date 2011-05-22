@@ -5,6 +5,8 @@ import markdown
 
 def process_markdown(src_dir, target_dir):
     "Converts files from :param src_dir: to html in the :param target_dir:"
+    if not os.path.exists(target_dir):
+        os.mkdir(target_dir)
     md = markdown.Markdown(extensions=['codehilite'])
 
     for file in os.listdir(src_dir):
